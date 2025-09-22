@@ -1,11 +1,10 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-mod app;
 mod models;
 mod ui;
 mod core;
 
-use app::LandoGui;
+use models::app::LandoGui;
 
 fn main() -> eframe::Result<()> {
     let native_options = eframe::NativeOptions::default();
