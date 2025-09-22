@@ -4,8 +4,8 @@ use std::sync::mpsc::Sender;
 use eframe::egui;
 use egui_term::TerminalBackend;
 
-use crate::lando_commands::{self as lando, LandoCommandOutcome};
-use crate::models::LandoService;
+use crate::models::commands::LandoCommandOutcome;
+use crate::models::lando::LandoService;
 
 pub struct AppServerUI {
     pub command_input: String,

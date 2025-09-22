@@ -4,8 +4,9 @@ use std::sync::mpsc::Sender;
 use eframe::egui;
 use egui_term::TerminalBackend;
 
-use crate::lando_commands::{self as lando, LandoCommandOutcome};
-use crate::models::LandoService;
+use crate::models::commands::LandoCommandOutcome;
+use crate::core::commands::*;
+use crate::models::lando::LandoService;
 
 pub struct NodeUI {
     pub command_input: String,
@@ -663,81 +664,6 @@ impl NodeUI {
 
     // Métodos auxiliares (implementaciones básicas - placeholders)
     fn refresh_node_info(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    
-    fn run_npm_script(&mut self, service: &LandoService, project_path: &PathBuf, sender: &Sender<LandoCommandOutcome>, is_loading: &mut bool, script: &str) {
-        *is_loading = true;
-        let command = format!("npm run {}", script);
-        lando::run_shell_command(
-            sender.clone(),
-            project_path.clone(),
-            service.service.clone(),
-            command,
-        );
-    }
-    
-    fn execute_npm_command(&mut self, service: &LandoService, project_path: &PathBuf, sender: &Sender<LandoCommandOutcome>, is_loading: &mut bool) {
-        if !self.npm_command_input.trim().is_empty() {
-            *is_loading = true;
-            let command = format!("npm {}", self.npm_command_input);
-            lando::run_shell_command(
-                sender.clone(),
-                project_path.clone(),
-                service.service.clone(),
-                command,
-            );
-        }
-    }
 
-    fn install_package(&mut self, service: &LandoService, project_path: &PathBuf, sender: &Sender<LandoCommandOutcome>, is_loading: &mut bool) {
-        if !self.package_name.trim().is_empty() {
-            *is_loading = true;
-            let version_part = if !self.package_version.is_empty() {
-                format!("@{}", self.package_version)
-            } else {
-                String::new()
-            };
-            
-            let flag = match self.dependency_type {
-                DependencyType::Development => " --save-dev",
-                DependencyType::Peer => " --save-peer",
-                DependencyType::Optional => " --save-optional",
-                _ => " --save",
-            };
-            
-            let command = format!("npm install {}{}{}", self.package_name, version_part, flag);
-            lando::run_shell_command(
-                sender.clone(),
-                project_path.clone(),
-                service.service.clone(),
-                command,
-            );
-        }
-    }
-
-    // Implementaciones básicas para otros métodos (placeholders)
-    fn load_package_json(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn save_package_json(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn search_package(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn refresh_packages_list(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn uninstall_package(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool, _package: &str) {}
-    fn update_package(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool, _package: &str) {}
-    fn start_debug_session(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn start_inspector(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn start_profiling(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn run_eslint(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn run_prettier(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn run_tests(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn run_coverage(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn show_npm_config(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn edit_npm_config(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn refresh_pm2_processes(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn pm2_start(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn pm2_stop_all(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn pm2_restart_all(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn pm2_delete_process(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool, _name: &str) {}
-    fn pm2_stop_process(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool, _name: &str) {}
-    fn pm2_restart_process(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool, _name: &str) {}
-    fn refresh_logs(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn show_npm_logs(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn show_pm2_logs(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
+    
 }

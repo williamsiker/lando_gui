@@ -2,8 +2,9 @@ use std::path::PathBuf;
 use std::sync::mpsc::{self, Receiver, Sender};
 use std::thread;
 use eframe::egui;
-use crate::lando_commands::{self as lando, LandoCommandOutcome};
-use crate::models::{LandoApp, LandoService};
+use crate::models::commands::LandoCommandOutcome;
+use crate::models::lando::{LandoApp, LandoService};
+use crate::core::commands::*;
 use egui_term::{TerminalBackend, TerminalView, PtyEvent, BackendSettings, BackendCommand};
 use crate::ui::service::ServiceUIManager;
 
@@ -42,7 +43,7 @@ impl LandoGui {
         let (pty_sender, _pty_receiver) = mpsc::channel::<(u64, PtyEvent)>();
 
         // Al iniciar, pedimos la lista de apps
-        lando::list_apps(sender.clone());
+        list_apps(sender.clone());
 
         Self {
             apps: vec![],
@@ -129,10 +130,10 @@ impl eframe::App for LandoGui {
                     
                     if ui.button("🔄 Refrescar Todo").clicked() && !self.is_loading {
                         self.is_loading = true;
-                        lando::list_apps(self.sender.clone());
+                        list_apps(self.sender.clone());
                         // Refrescar proyecto actual si está seleccionado
                         if let Some(path) = &self.selected_project_path {
-                            lando::get_project_info(self.sender.clone(), path.clone());
+                            get_project_info(self.sender.clone(), path.clone());
                         }
                     }
                     
@@ -160,7 +161,7 @@ impl eframe::App for LandoGui {
 
                         thread::spawn(move || {
                             if let Some(path) = rfd::FileDialog::new().pick_folder() {
-                                lando::scan_for_projects(sender, path);
+                                scan_for_projects(sender, path);
                             } else {
                                 let _ = sender.send(LandoCommandOutcome::FinishedLoading);
                             }
@@ -244,7 +245,7 @@ impl eframe::App for LandoGui {
                                     self.db_query_input.clear();
                                     self.db_query_result = None;
                                     self.shell_command_input.clear();
-                                    lando::get_project_info(self.sender.clone(), path.clone());
+                                    get_project_info(self.sender.clone(), path.clone());
                                 }
                             }
                         });
@@ -316,7 +317,7 @@ impl eframe::App for LandoGui {
                             
                             if btn.clicked() {
                                 self.is_loading = true;
-                                lando::run_lando_command(self.sender.clone(), cmd.to_string(), selected_path.clone());
+                                run_lando_command(self.sender.clone(), cmd.to_string(), selected_path.clone());
                             }
                         }
                     });
@@ -335,7 +336,7 @@ impl eframe::App for LandoGui {
                             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                                 if ui.small_button("🔄").on_hover_text("Refrescar servicios").clicked() && !self.is_loading {
                                     self.is_loading = true;
-                                    lando::get_project_info(self.sender.clone(), selected_path.clone());
+                                    get_project_info(self.sender.clone(), selected_path.clone());
                                 }
                             });
                         });
@@ -393,7 +394,7 @@ impl eframe::App for LandoGui {
                         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                             if ui.small_button("🔄").on_hover_text("Refrescar servicios").clicked() && !self.is_loading {
                                 self.is_loading = true;
-                                lando::get_project_info(self.sender.clone(), selected_path.clone());
+                                get_project_info(self.sender.clone(), selected_path.clone());
                             }
                         });
                     });
@@ -470,7 +471,7 @@ impl eframe::App for LandoGui {
                         ui.add_space(20.0);
                         if ui.button("🔄 Intentar recargar").clicked() {
                             self.is_loading = true;
-                            lando::get_project_info(self.sender.clone(), selected_path.clone());
+                            get_project_info(self.sender.clone(), selected_path.clone());
                         }
                         ui.add_space(50.0);
                     });

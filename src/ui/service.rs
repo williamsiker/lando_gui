@@ -5,8 +5,9 @@ use std::collections::HashMap;
 use eframe::egui;
 use egui_term::TerminalBackend;
 
-use crate::lando_commands::{self as lando, LandoCommandOutcome};
-use crate::models::LandoService;
+use crate::models::commands::LandoCommandOutcome;
+use crate::models::lando::LandoService;
+use crate::core::commands::*;
 use crate::ui::database::DatabaseUI;
 use crate::ui::appserver::AppServerUI;
 use crate::ui::node::NodeUI;
@@ -162,7 +163,7 @@ impl ServiceUIManager {
             ui.horizontal(|ui| {
                 if ui.button("📊 Status").clicked() && !*is_loading {
                     *is_loading = true;
-                    lando::run_shell_command(
+                    run_shell_command(
                         sender.clone(),
                         project_path.clone(),
                         service.service.clone(),
@@ -172,13 +173,13 @@ impl ServiceUIManager {
                 
                 if ui.button("🔄 Restart").clicked() && !*is_loading {
                     *is_loading = true;
-                    lando::run_shell_command(
+                    run_shell_command(
                         sender.clone(),
                         project_path.clone(),
                         service.service.clone(),
                         "restart".to_string(),
                     );
-                }
+               }
             });
         });
     }
@@ -190,29 +191,4 @@ enum ServiceType {
     AppServer,
     Node,
     Generic,
-}
-
-// Función de conveniencia para mantener compatibilidad con el código existente
-// Esta función será deprecada una vez que se migre completamente a ServiceUIManager
-pub fn show_service_details(
-    ui: &mut egui::Ui,
-    service: &LandoService,
-    project_path: &PathBuf,
-    sender: &Sender<LandoCommandOutcome>,
-    _db_query_input: &mut String,  // Deprecated - ahora manejado internamente
-    _shell_command_input: &mut String,  // Deprecated - ahora manejado internamente
-    is_loading: &mut bool,
-    terminal: &mut TerminalBackend,
-) {
-    // Para mantener compatibilidad, creamos una instancia temporal
-    // En una futura actualización, esto debería moverse al estado de la aplicación
-    thread_local! {
-        static MANAGER: std::cell::RefCell<ServiceUIManager> = std::cell::RefCell::new(ServiceUIManager::default());
-    }
-    
-    MANAGER.with(|manager| {
-        manager.borrow_mut().show_service_details(
-            ui, service, project_path, sender, is_loading, terminal
-        );
-    });
 }

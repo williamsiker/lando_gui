@@ -1,23 +1,11 @@
-use crate::models::{LandoApp, LandoService};
 use std::io::{BufReader, Read};
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 use std::sync::mpsc::Sender;
 use std::thread;
 use walkdir::WalkDir;
-
-// Mensajes que los hilos de trabajo envían a la UI.
-#[derive(Debug)]
-pub enum LandoCommandOutcome {
-    List(Vec<LandoApp>),
-    Projects(Vec<PathBuf>),
-    Info(Vec<LandoService>),
-    DbQueryResult(String),
-    Error(String),
-    CommandSuccess(String),
-    FinishedLoading, // Para indicar que una tarea en segundo plano ha terminado
-    LogOutput(Vec<u8>), // Para enviar la salida del comando en tiempo real
-}
+use crate::models::commands::LandoCommandOutcome;
+use crate::models::lando::{LandoApp, LandoService};
 
 // Lanza un comando `lando list` en un hilo separado.
 pub fn list_apps(sender: Sender<LandoCommandOutcome>) {
@@ -185,7 +173,7 @@ pub fn run_db_query(sender: Sender<LandoCommandOutcome>, project_path: PathBuf, 
                         .args(["db-cli", "-s", &service, "-e", &query])
                         .current_dir(project_path)
                         .output();
-                    
+
                     match output2 {
                         Ok(output2) => {
                             if output2.status.success() {
