@@ -589,6 +589,7 @@ impl LandoGui {
             }
             ui.add_space(50.0);
         });
+        //df
     }
 
     fn render_query_results_section(&mut self, ui: &mut egui::Ui) {
