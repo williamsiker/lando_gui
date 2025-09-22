@@ -2,10 +2,10 @@ use std::path::PathBuf;
 use std::sync::mpsc::{self, Receiver, Sender};
 use std::thread;
 use eframe::egui;
-use crate::lando::{self, LandoCommandOutcome};
+use crate::lando_commands::{self as lando, LandoCommandOutcome};
 use crate::models::{LandoApp, LandoService};
 use egui_term::{TerminalBackend, TerminalView, PtyEvent, BackendSettings, BackendCommand};
-use crate::service_ui::ServiceUIManager;
+use crate::ui::service_ui::ServiceUIManager;
 
 pub struct LandoGui {
     // Estado de la UI

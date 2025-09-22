@@ -4,7 +4,7 @@ use std::sync::mpsc::Sender;
 use eframe::egui;
 use egui_term::TerminalBackend;
 
-use crate::lando::{self, LandoCommandOutcome};
+use crate::lando_commands::{self as lando, LandoCommandOutcome};
 use crate::models::LandoService;
 
 pub struct NodeUI {
@@ -116,7 +116,7 @@ impl NodeUI {
         is_loading: &mut bool,
         terminal: &mut TerminalBackend,
     ) {
-        ui.collapsing(format!("�️ Node.js: {} ({})", service.service, service.r#type), |ui| {
+        ui.collapsing(format!("️ Node.js: {} ({})", service.service, service.r#type), |ui| {
             // Información del servicio
             self.show_service_header(ui, service);
             

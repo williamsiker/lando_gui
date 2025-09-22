@@ -5,11 +5,11 @@ use std::collections::HashMap;
 use eframe::egui;
 use egui_term::TerminalBackend;
 
-use crate::lando::{self, LandoCommandOutcome};
+use crate::lando_commands::{self as lando, LandoCommandOutcome};
 use crate::models::LandoService;
-use crate::database_ui::DatabaseUI;
-use crate::appserver_ui::AppServerUI;
-use crate::node_ui::NodeUI;
+use crate::ui::database_ui::DatabaseUI;
+use crate::ui::appserver_ui::AppServerUI;
+use crate::ui::node_ui::NodeUI;
 
 // Gestor de estado para las diferentes UIs especializadas
 pub struct ServiceUIManager {

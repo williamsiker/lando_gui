@@ -1,12 +1,9 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod app;
-mod lando;
+mod lando_commands;
 mod models;
-mod service_ui;
-mod database_ui;
-mod appserver_ui;
-mod node_ui;
+mod ui;
 
 use app::LandoGui;
 
