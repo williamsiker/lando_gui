@@ -5,7 +5,7 @@ use eframe::egui;
 use crate::lando_commands::{self as lando, LandoCommandOutcome};
 use crate::models::{LandoApp, LandoService};
 use egui_term::{TerminalBackend, TerminalView, PtyEvent, BackendSettings, BackendCommand};
-use crate::ui::service_ui::ServiceUIManager;
+use crate::ui::service::ServiceUIManager;
 
 pub struct LandoGui {
     // Estado de la UI

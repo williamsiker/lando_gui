@@ -7,9 +7,9 @@ use egui_term::TerminalBackend;
 
 use crate::lando_commands::{self as lando, LandoCommandOutcome};
 use crate::models::LandoService;
-use crate::ui::database_ui::DatabaseUI;
-use crate::ui::appserver_ui::AppServerUI;
-use crate::ui::node_ui::NodeUI;
+use crate::ui::database::DatabaseUI;
+use crate::ui::appserver::AppServerUI;
+use crate::ui::node::NodeUI;
 
 // Gestor de estado para las diferentes UIs especializadas
 pub struct ServiceUIManager {

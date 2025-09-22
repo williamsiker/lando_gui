@@ -4,6 +4,7 @@ mod app;
 mod lando_commands;
 mod models;
 mod ui;
+mod core;
 
 use app::LandoGui;
 

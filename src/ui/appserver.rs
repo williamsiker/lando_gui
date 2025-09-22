@@ -512,81 +512,10 @@ impl AppServerUI {
             ui.add_space(100.0);
         });
     }
-
-    // Métodos auxiliares (implementaciones básicas)
-    fn refresh_service_status(&mut self) {
-        // Implementar
-    }
-
-    fn restart_service(&mut self) {
-        // Implementar
-    }
-
-    fn start_service(&mut self) {
-        // Implementar
-    }
-
-    fn stop_service(&mut self) {
-        // Implementar
-    }
-
-    fn get_list_modules_command(&self, server_type: &str) -> String {
-        match server_type.to_lowercase().as_str() {
-            "apache" => "apache2ctl -M".to_string(),
-            "nginx" => "nginx -V".to_string(),
-            "php" => "php -m".to_string(),
-            _ => "status".to_string(),
-        }
-    }
-
-    fn execute_custom_command(
-        &mut self,
-        service: &LandoService,
-        project_path: &PathBuf,
-        sender: &Sender<LandoCommandOutcome>,
-        is_loading: &mut bool,
-    ) {
-        if !self.command_input.trim().is_empty() {
-            *is_loading = true;
-            self.command_history.push(self.command_input.clone());
-            
-            lando::run_shell_command(
-                sender.clone(),
-                project_path.clone(),
-                service.service.clone(),
-                self.command_input.clone(),
-            );
-        }
-    }
-
-    // Placeholder para otros métodos
-    fn restart_service_with_feedback(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn stop_service_with_feedback(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn start_service_with_feedback(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn reload_configuration(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn clear_cache(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn test_connection(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn refresh_logs(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn export_logs(&mut self) {}
     fn show_access_logs(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
     fn show_error_logs(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
     fn show_debug_logs(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn load_config_file(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn save_config_file(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn backup_config_file(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn validate_config(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn test_config(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
     fn show_config_diff(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn add_environment_variable(&mut self) {
-        if !self.new_env_key.is_empty() && !self.new_env_value.is_empty() {
-            self.environment_vars.push((self.new_env_key.clone(), self.new_env_value.clone()));
-            self.new_env_key.clear();
-            self.new_env_value.clear();
-        }
-    }
-    fn apply_environment_changes(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn reload_environment_variables(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn get_server_stats(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn get_active_connections(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
-    fn get_performance_metrics(&mut self, _service: &LandoService, _project_path: &PathBuf, _sender: &Sender<LandoCommandOutcome>, _is_loading: &mut bool) {}
+
+
 }
